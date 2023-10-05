@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "552770420823",
+    "project_id": "appdubaothoitiet-47b07",
+    "storage_bucket": "appdubaothoitiet-47b07.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:552770420823:android:e1f3615a7d566f8ddbe312",
+        "android_client_info": {
+          "package_name": "com.example.app_dubaothoitiet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "552770420823-6d5rvepgsj2ntne464n9rhbo8oldv6kq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJlWnC_GWGfto8cGsKpo_WEKJY7eLP-H8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "552770420823-6d5rvepgsj2ntne464n9rhbo8oldv6kq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
