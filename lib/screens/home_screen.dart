@@ -12,6 +12,7 @@ import 'package:app_dubaothoitiet/widgets/current_weather_widget.dart';
 import 'package:app_dubaothoitiet/widgets/daily_data_forecast.dart';
 import 'package:app_dubaothoitiet/widgets/hourly_data_widget.dart';
 
+import '../components/profile_page.dart';
 import '../widgets/hearder_widget.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -28,6 +29,72 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+
+       title: Row(
+         children: [
+           SizedBox(width:45),
+           GestureDetector(
+             onTap: (){
+               Navigator.push(
+                 context,
+                 MaterialPageRoute(builder: (context) => const ProfilePage()),
+               );
+             },
+             child: Icon(
+               Icons.person
+                   
+
+             ),
+           ),
+           SizedBox(width:50),
+           GestureDetector(
+             onTap: (){
+               Navigator.push(
+                 context,
+                 MaterialPageRoute(builder: (context) => const HomeScreen()),
+               );
+             },
+             child: Icon(
+                 Icons.ac_unit_rounded
+
+             ),
+           ),
+           SizedBox(width:50),
+           GestureDetector(
+             onTap: (){
+               Navigator.push(
+                 context,
+                 MaterialPageRoute(builder: (context) => const Drawer()),
+               );
+             },
+             child: Icon(
+                 Icons.map_outlined
+
+
+             ),
+           ),
+           SizedBox(width:50),
+
+           GestureDetector(
+             onTap: ()async{
+               await FirebaseAuth.instance.signOut();
+               Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (context) =>
+                   LoginPage()), (route) => false);
+
+             },
+             child: Icon(
+                 Icons.logout_outlined
+
+             ),
+           ),
+         ],
+       ),
+
+        backgroundColor: Colors.black12,
+
+      ),
+
       body: SafeArea(
         child: Obx(() => globalController.checkLoading().isTrue
             ? Center(
