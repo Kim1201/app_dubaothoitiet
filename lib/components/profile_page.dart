@@ -13,13 +13,25 @@ class ProfileApp extends StatelessWidget {
 }
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+   ProfilePage({super.key});
+  bool isEditing = false;
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Trang Cá nhân'),
+    actions: [
+    IconButton(
+    icon: Icon(Icons.edit),
+    onPressed: () {
+    // Cập nhật trạng thái chỉnh sửa khi nút được nhấn
+    isEditing = !isEditing;
+
+    },
+    ),
+    ],
       ),
       body: Center(
         child: Column(

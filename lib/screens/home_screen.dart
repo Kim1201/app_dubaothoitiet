@@ -33,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
        title: Row(
          children: [
-           SizedBox(width:45),
+           SizedBox(width:35),
            GestureDetector(
              onTap: (){
                Navigator.push(
