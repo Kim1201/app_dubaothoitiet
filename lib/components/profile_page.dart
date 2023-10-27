@@ -1,16 +1,17 @@
+import 'package:app_dubaothoitiet/components/edit_profile.dart';
 import 'package:flutter/material.dart';
 
 void main() {
   runApp(ProfilePage());
 }
-class ProfileApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-
-    );
-  }
-}
+// class ProfileApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//
+//     );
+//   }
+// }
 
 class ProfilePage extends StatelessWidget {
    ProfilePage({super.key});
@@ -21,29 +22,29 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Trang Cá nhân'),
-    actions: [
-    IconButton(
-    icon: Icon(Icons.edit),
-    onPressed: () {
-    // Cập nhật trạng thái chỉnh sửa khi nút được nhấn
-    isEditing = !isEditing;
-
-    },
-    ),
-    ],
+        title: const Text('Trang Cá nhân'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: () {
+              // Cập nhật trạng thái chỉnh sửa khi nút được nhấn
+              isEditing = !isEditing;
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> const EditProfilePage()));
+            },
+          ),
+        ],
       ),
-      body: Center(
+      body: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircleAvatar(
               radius: 70,
-              backgroundImage: AssetImage('assets/profile_picture.jpg'),
+              // backgroundImage: AssetImage('assets/ta.ppg'),
             ),
             SizedBox(height: 100),
             Text(
-              'Name',
+              'Huỳnh Diệu',
               style: TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,

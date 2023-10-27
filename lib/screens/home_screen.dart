@@ -1,4 +1,7 @@
 // import 'package:app_dubaothoitiet/api/custom_color.dart';
+import 'package:app_dubaothoitiet/components/compass.dart';
+import 'package:app_dubaothoitiet/components/edit_profile.dart';
+import 'package:app_dubaothoitiet/components/map_screen.dart';
 import 'package:app_dubaothoitiet/pages/login_page.dart';
 import 'package:app_dubaothoitiet/widgets/harder_widget.dart';
 import 'package:app_dubaothoitiet/widgets/hourly_data_widget.dart';
@@ -31,64 +34,84 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
 
-       title: Row(
-         children: [
-           SizedBox(width:35),
-           GestureDetector(
-             onTap: (){
-               Navigator.push(
-                 context,
-                 MaterialPageRoute(builder: (context) =>  ProfilePage()),
-               );
-             },
-             child: Icon(
-               Icons.person
-                   
+       title: SingleChildScrollView(
+         scrollDirection: Axis.horizontal,
+         child: Row(
+           children: [
+             const SizedBox(width:35),
+             GestureDetector(
+               onTap: (){
+                 Navigator.push(
+                   context,
+                   MaterialPageRoute(builder: (context) =>  const EditProfilePage()),
+                 );
+               },
+               child: const Icon(
+                 Icons.person
+                     
 
+               ),
              ),
-           ),
-           SizedBox(width:50),
-           GestureDetector(
-             onTap: (){
-               Navigator.push(
-                 context,
-                 MaterialPageRoute(builder: (context) => const HomeScreen()),
-               );
-             },
-             child: Icon(
-                 Icons.ac_unit_rounded
+             const SizedBox(width:50),
+             GestureDetector(
+               onTap: (){
+                 Navigator.push(
+                   context,
+                   MaterialPageRoute(builder: (context) => const HomeScreen()),
+                 );
+               },
+               child: const Icon(
+                   Icons.ac_unit_rounded
 
+               ),
              ),
-           ),
-           SizedBox(width:50),
-           GestureDetector(
-             onTap: (){
-               Navigator.push(
-                 context,
-                 MaterialPageRoute(builder: (context) => const Drawer()),
-               );
-             },
-             child: Icon(
-                 Icons.map_outlined
+             const SizedBox(width:50),
+             GestureDetector(
+               onTap: (){
+                 Navigator.push(
+                   context,
+                   MaterialPageRoute(builder: (context) =>
+                       MapScreen()),
+                 );
+               },
+               child: const Icon(
+                   Icons.map_outlined
 
 
+               ),
              ),
-           ),
-           SizedBox(width:50),
+             const SizedBox(width:50),
 
-           GestureDetector(
-             onTap: ()async{
-               await FirebaseAuth.instance.signOut();
-               Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (context) =>
-                   LoginPage()), (route) => false);
+             GestureDetector(
+               onTap: ()async{
+                 await FirebaseAuth.instance.signOut();
+                 Navigator.push(context,MaterialPageRoute(builder: (context) =>
+                 const CompassScreen()));
 
-             },
-             child: Icon(
-                 Icons.logout_outlined
+               },
+               child: const Icon(
+                   Icons.compass_calibration_rounded
 
+               ),
              ),
-           ),
-         ],
+             const SizedBox(width:50),
+
+             GestureDetector(
+               onTap: ()async{
+                 await FirebaseAuth.instance.signOut();
+                 Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (context) =>
+                     LoginPage()), (route) => false);
+
+               },
+               child: const Icon(
+                   Icons.logout_outlined
+
+               ),
+             ),
+
+
+           ],
+         ),
        ),
 
         backgroundColor: Colors.black12,
@@ -143,7 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         weatherDataCurrent:
                             globalController.getData().getCurrentWeather()),
                     Container(
-                        margin: EdgeInsets.all(10),
+                        margin: const EdgeInsets.all(10),
                         child:ElevatedButton(
                           onPressed: () async {
                             await FirebaseAuth.instance.signOut();
@@ -152,13 +175,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                           style: ElevatedButton.styleFrom(
                             primary: Colors.black12,
-                            minimumSize: Size(88, 36),
-                            padding: EdgeInsets.symmetric(horizontal: 16),
+                            minimumSize: const Size(88, 36),
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
                             shape: const RoundedRectangleBorder(
                               borderRadius: BorderRadius.all(Radius.circular(2)),
                             ),
                           ),
-                          child: Text ('Đăng Xuất',style: TextStyle(fontSize: 20,color: Colors.red),),
+                          child: const Text ('Đăng Xuất',style: TextStyle(fontSize: 20,color: Colors.red),),
 
 
 
