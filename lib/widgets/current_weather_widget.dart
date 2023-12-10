@@ -6,8 +6,10 @@ import 'package:flutter/material.dart';
 class CurrentWeatherWidget extends StatelessWidget {
   final WeatherDataCurrent weatherDataCurrent;
 
-  const CurrentWeatherWidget({Key? key, required this.weatherDataCurrent})
+  const CurrentWeatherWidget({Key? key, required this.weatherDataCurrent,this.isShowWindyInfo = true})
       : super(key: key);
+
+  final bool isShowWindyInfo;
 
   @override
   Widget build(BuildContext context) {
@@ -15,12 +17,13 @@ class CurrentWeatherWidget extends StatelessWidget {
       children: [
         //tempeture area
         tempeatureAreaWidget(),
-
-        const SizedBox(
-          height: 20,
-        ),
+        if(isShowWindyInfo)
+          const SizedBox(
+            height: 20,
+          ),
         // more details - windspeed, humidity, clouds
-        currentWeatherMoreDetailsWidget(),
+        if(isShowWindyInfo)
+          currentWeatherMoreDetailsWidget(),
       ],
     );
   }

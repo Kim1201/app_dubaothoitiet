@@ -1,3 +1,5 @@
+import 'package:app_dubaothoitiet/utils/distance.dart';
+import 'package:app_dubaothoitiet/utils/province.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:app_dubaothoitiet/api/fetch_weather.dart';
@@ -9,11 +11,15 @@ class GlobalController extends GetxController {
   final RxDouble _lattitude = 0.0.obs;
   final RxDouble _longitude = 0.0.obs;
   final RxInt _currentIndex = 0.obs;
+  final RxString _currentCityName = ''.obs;
+  Province _currentProvince = ProvinceLatLon.provinces.first;
 
   // instance for them to be called
   RxBool checkLoading() => _isLoading;
   RxDouble getLattitude() => _lattitude;
   RxDouble getLongitude() => _longitude;
+  RxString getCityName() => _currentCityName;
+  Province getCurrentProvince() => _currentProvince;
 
   final weatherData = WeatherData().obs;
 
@@ -59,8 +65,11 @@ class GlobalController extends GetxController {
             desiredAccuracy: LocationAccuracy.high)
         .then((value) {
       // update our latitude and longitude
-      _lattitude.value = value.latitude;
-      _longitude.value = value.longitude;
+      var minDistanceProvince = CalculateDistance.getTheClosestDistanceLocationProvince(value);
+      _currentProvince = minDistanceProvince;
+      _currentCityName.value = minDistanceProvince.name;
+      _lattitude.value = minDistanceProvince.latitude;
+      _longitude.value = minDistanceProvince.longitude;
       // calling our weather api
       return FetchWeatherAPI()
           .processData(value.latitude.toString(), value.longitude.toString())
@@ -70,6 +79,20 @@ class GlobalController extends GetxController {
       });
     });
   }
+
+  refreshWeatherData(Province province){
+    FetchWeatherAPI()
+        .processData(province.latitude.toString(), province.longitude.toString())
+        .then((value) {
+      weatherData.value = value;
+      _currentProvince = province;
+      _currentCityName.value = province.name;
+      _lattitude.value = province.latitude;
+      _longitude.value = province.longitude;
+      _isLoading.value = false;
+    });
+  }
+
 
   RxInt getIndex() {
     return _currentIndex;

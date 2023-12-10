@@ -5,8 +5,8 @@ import 'package:intl/intl.dart';
 import 'package:app_dubaothoitiet/controller/global_controller.dart';
 
 class HeaderWidget extends StatefulWidget {
-  const HeaderWidget({Key? key}) : super(key: key);
-
+  const HeaderWidget({Key? key,this.city = ''}) : super(key: key);
+  final String city;
   @override
   State<HeaderWidget> createState() => _HeaderWidgetState();
 }
@@ -20,18 +20,10 @@ class _HeaderWidgetState extends State<HeaderWidget> {
 
   @override
   void initState() {
-    getAddress(globalController.getLattitude().value,
-        globalController.getLongitude().value);
+    city = widget.city;
     super.initState();
   }
 
-  getAddress(lat, lon) async {
-    List<Placemark> placemark = await placemarkFromCoordinates(lat, lon);
-    Placemark place = placemark[0];
-    setState(() {
-      city = place.locality!;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,11 +32,11 @@ class _HeaderWidgetState extends State<HeaderWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          margin: const EdgeInsets.only(left: 20, right: 20),
+          margin: const EdgeInsets.only(left: 20, right: 20,top: 10),
           alignment: Alignment.topLeft,
           child: Text(
             city,
-            style: const TextStyle(fontSize: 35, height: 2),
+            style: const TextStyle(fontSize: 35,fontWeight: FontWeight.w800),
           ),
         ),
         Container(

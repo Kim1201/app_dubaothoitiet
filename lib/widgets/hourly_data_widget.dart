@@ -21,7 +21,7 @@ class HourlyDataWidget extends StatelessWidget {
         Container(
           margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
           alignment: Alignment.topCenter,
-          child: const Text("Today", style: TextStyle(fontSize: 18)),
+          child: const Text("Hôm nay", style: TextStyle(fontSize: 18)),
         ),
         hourlyList(),
       ],

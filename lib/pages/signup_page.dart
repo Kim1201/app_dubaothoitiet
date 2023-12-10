@@ -1,9 +1,14 @@
+import 'dart:convert';
+
+import 'package:app_dubaothoitiet/app_service.dart';
+import 'package:app_dubaothoitiet/model/config.dart';
+import 'package:app_dubaothoitiet/screens/home_screen.dart';
+import 'package:app_dubaothoitiet/utils/api_url.dart';
+import 'package:app_dubaothoitiet/utils/share_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:app_dubaothoitiet/components/my_button.dart';
 import 'package:app_dubaothoitiet/components/my_textfield.dart';
-import 'package:app_dubaothoitiet/components/square_tile.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:get/get.dart';
+
 class Signupage extends StatefulWidget {
   Signupage({super.key});
 
@@ -12,42 +17,113 @@ class Signupage extends StatefulWidget {
 }
 
 class _SignupageState extends State<Signupage> {
-  // text editing controllers
   final emailController = TextEditingController();
+  final nameController = TextEditingController();
+  final nickNameController = TextEditingController();
   final passwordController = TextEditingController();
-
+  final confirmPasswordController = TextEditingController();
 
   bool isHidePassword = true;
 
+  late final AppServices appServiceRegisterUser;
+  late final Config realmConfig;
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _initConfig();
+  }
 
-
-
-
+  _initConfig() async {
+    realmConfig = await Config.getConfig('assets/config/atlasConfig.json');
+    appServiceRegisterUser = AppServices(realmConfig.appId, realmConfig.baseUrl);
+  }
 
 
   void signUserUp() async {
+    await appServiceRegisterUser.registerUserEmailPassword(
+        emailController.text, passwordController.text);
+    var response = await MongoDBAPI()
+        .loginUser(emailController.text, passwordController.text);
     try {
-      final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
-      );
-
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
-      } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
+      var tempResponseMap = json.decode(response);
+      if (tempResponseMap['access_token'] != null) {
+        LocalStorage.save('access_token', tempResponseMap['access_token']);
+        LocalStorage.save('email', emailController.text);
+        if (context.mounted) {
+          await MongoDBAPI()
+              .insertOneCallMongo(context, collection: 'user', document: {
+            'user_id': '',
+            'email': emailController.text,
+            'name': nameController.text,
+            'nickname': nickNameController.text,
+            'given_name': nickNameController.text,
+            'family_name': nickNameController.text,
+            'created_at': DateTime.now().toIso8601String(),
+            'updated_at': DateTime.now().toIso8601String(),
+          }).then((value) {
+            if (context.mounted) {
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => const HomeScreen()),
+                  (route) => false);
+            }
+          });
+        }
+      } else {
+        throw Exception("Đăng ký thất bại!");
       }
     } catch (e) {
-      print("ERROR: $e");
+      if (context.mounted) {
+        _showDialogRegister("Đăng ký thất bại");
+      }
     }
+  }
 
-
-
-
-
-
+  void _showDialogRegister(String value) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+              content: SizedBox(
+                  height: 100,
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: Center(
+                          child: Text(
+                            value,
+                            style: const TextStyle(
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w800,
+                              fontSize: 20,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        style: const ButtonStyle(
+                          backgroundColor:
+                              MaterialStatePropertyAll<Color>(Colors.black),
+                        ),
+                        child: const Text(
+                          "Đóng",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 20,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
+                  )));
+        });
   }
 
   @override
@@ -61,112 +137,90 @@ class _SignupageState extends State<Signupage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(height: 50),
-
-                // logo
+                const SizedBox(height: 20),
                 const Icon(
-                  Icons.lock,
+                  Icons.umbrella_rounded,
                   size: 80,
                 ),
-
-                const SizedBox(height: 50),
-
-                // welcome back, you've been missed!
-                Text(
-                  'Welcome back',
-                  style: TextStyle(
-                    color: Colors.grey[700],
-                    fontSize: 16,
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: Text(
+                    'Chào mừng tới ứng dụng xem dự báo thời tiết \n Bạn điền thông tin phía dưới để tạo tài khoản!',
+                    style: TextStyle(
+                      color: Colors.grey[700],
+                      fontSize: 18,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
                 ),
-
                 const SizedBox(height: 25),
-
                 // username textfield
                 MyTextField(
                   controller: emailController,
                   hintText: 'Email',
                   obscureText: false,
-
                 ),
-
                 const SizedBox(height: 10),
-
-                // password textfield
+                MyTextField(
+                  controller: nameController,
+                  hintText: 'Họ tên',
+                  callBackSuffix: () {
+                    setState(() {});
+                  },
+                  obscureText: false,
+                ),
+                const SizedBox(height: 10),
+                MyTextField(
+                  controller: nickNameController,
+                  hintText: 'Nick name',
+                  obscureText: false,
+                  callBackSuffix: () {
+                    setState(() {});
+                  },
+                ),
+                const SizedBox(height: 10),
                 MyTextField(
                   controller: passwordController,
                   hintText: 'Mật Khẩu',
-                  suffixIcon:const Icon(Icons.remove_red_eye),
+                  suffixIcon: const Icon(Icons.remove_red_eye),
                   obscureText: isHidePassword,
-                  callBackSuffix: (){
+                  callBackSuffix: () {
                     isHidePassword = !isHidePassword;
-                    setState((){});
-
-
+                    setState(() {});
                   },
-
                 ),
-
-
+                const SizedBox(height: 10),
+                // password textfield
+                MyTextField(
+                  controller: confirmPasswordController,
+                  hintText: 'Xác nhận lại Mật Khẩu',
+                  suffixIcon: const Icon(Icons.remove_red_eye),
+                  obscureText: isHidePassword,
+                  callBackSuffix: () {
+                    isHidePassword = !isHidePassword;
+                    setState(() {});
+                  },
+                ),
                 const SizedBox(height: 25),
-
                 // sign in button
                 MyButton(
                   onTap: signUserUp,
                   title: 'Đăng ký',
                 ),
-
-
-                const SizedBox(height: 50),
-
-                // or continue with
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Divider(
-                          thickness: 0.5,
-                          color: Colors.grey[400],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: Text(
-                          'Đăng Nhập Bằng ',
-                          style: TextStyle(color: Colors.grey[700]),
-                        ),
-                      ),
-                      Expanded(
-                        child: Divider(
-                          thickness: 0.5,
-                          color: Colors.grey[400],
-                        ),
-                      ),
-                    ],
+                const SizedBox(height: 20),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text(
+                    "Đăng nhập",
+                    style: TextStyle(fontWeight: FontWeight.w800, fontSize: 20),
                   ),
                 ),
-
-                const SizedBox(height: 30),
-
-                // google + apple sign in buttons
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // google button
-                    SquareTile(imagePath: 'lib/images/google.png'),
-
-                    SizedBox(width: 25),
-
-                    // apple button
-
-                  ],
-                ),
-
-                const SizedBox(height: 20),
-
-                // not a member? register now
-
+                SizedBox(
+                  height: MediaQuery.of(context).viewInsets.bottom,
+                )
               ],
             ),
           ),
@@ -174,6 +228,4 @@ class _SignupageState extends State<Signupage> {
       ),
     );
   }
-
-
 }

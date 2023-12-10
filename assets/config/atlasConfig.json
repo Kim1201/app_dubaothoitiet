@@ -1,0 +1,9 @@
+{
+    "appId": "data-agxhb",
+    "appUrl": "https://realm.mongodb.com/groups/656342d3e39cd94bcae55b5f/apps/6563461a213861cb70f1030b",
+    "baseUrl": "https://realm.mongodb.com",
+    "clientApiBaseUrl": "https://ap-southeast-1.aws.realm.mongodb.com",
+    "dataApiBaseUrl": "https://ap-southeast-1.aws.data.mongodb-api.com",
+    "dataExplorerLink": "https://cloud.mongodb.com/links/656342d3e39cd94bcae55b5f/explorer/Cluster0/database/collection/find",
+    "dataSourceName": "mongodb-atlas"
+}

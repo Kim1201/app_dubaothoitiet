@@ -14,7 +14,7 @@ class DailyDataForecast extends StatelessWidget {
   // string manipulation
   String getDay(final day) {
     DateTime time = DateTime.fromMillisecondsSinceEpoch(day * 1000);
-    final x = formatDate(DateTime.now(), [dd, '/', mm, '/', yyyy, ' ', HH, ':', nn]);
+    final x = formatDate(time, [dd, '/', mm, '/', yyyy, ' ', HH, ':', nn]);
     return x;
   }
 
@@ -34,7 +34,7 @@ class DailyDataForecast extends StatelessWidget {
             alignment: Alignment.topLeft,
             margin: const EdgeInsets.only(bottom: 10),
             child: const Text(
-              "Next Days",
+              "Dự báo các ngày tiếp theo",
               style:
                   TextStyle(color: CustomColors.textColorBlack, fontSize: 17),
             ),
